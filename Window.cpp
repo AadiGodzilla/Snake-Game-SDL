@@ -4,13 +4,6 @@ Window* Window::instance = nullptr;
 
 Window::Window()
 {
-	this->CELL_SIZE = 20;
-	this->CELL_ROWS= 40;
-	this->CELL_COLUMN = 30;
-
-	this->SCREEN_HEIGHT = this->CELL_COLUMN * this->CELL_SIZE;
-	this->SCREEN_WIDTH = this->CELL_ROWS * this->CELL_SIZE;
-
 	this->running = true;
 }
 
@@ -43,8 +36,8 @@ void Window::init()
 		"Snake Game", 
 		SDL_WINDOWPOS_CENTERED, 
 		SDL_WINDOWPOS_CENTERED, 
-		get()->SCREEN_WIDTH, 
-		get()->SCREEN_HEIGHT, 
+		WINDOW_WIDTH, 
+		WINDOW_HEIGHT, 
 		NULL
 	);
 
@@ -54,8 +47,8 @@ void Window::init()
 	SDL_SetWindowIcon(window, icon);
 	SDL_FreeSurface(icon);
 
-	snake = Snake(10 * CELL_SIZE, 10 * CELL_SIZE, CELL_SIZE);
-	apple = Apple(CELL_ROWS, CELL_COLUMN, CELL_SIZE);
+	snake = Snake(10 * CELLSIZE, 10 * CELLSIZE, CELLSIZE);
+	apple = Apple(CELLROWS, CELLCOLUMNS, CELLSIZE);
 
 	score = Score(renderer, "Arial.ttf", 20);
 }
@@ -77,7 +70,7 @@ void Window::loop()
 			else if (event.key.keysym.sym == SDLK_d && snake.direction != snake.LEFT) snake.direction = snake.RIGHT;
 		}
 		
-		snake.boundary(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		snake.boundary(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 		snake.movement();
 
 		Collision::appleSnakeCollision(&snake, &apple, score);
@@ -91,7 +84,7 @@ void Window::loop()
 		score.render(renderer, {255,255,255,255});
 
 		SDL_RenderPresent(renderer);
-		SDL_Delay(1000 / 15);
+		SDL_Delay(1000 / FPS);
 	}
 }
 
